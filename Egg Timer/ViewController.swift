@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func hardnessSelected(_ sender: UIButton) {
+        timer.invalidate()
         let hardness : String = sender.currentTitle!//Make sure egg buttons have correct title values.
         timerSeconds = eggBoilTimeInMinutes[hardness]! * 60
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) {
@@ -27,7 +28,6 @@ class ViewController: UIViewController {
     }
     
     func updateTimerCounting(){
-        print("Hello")
         print(timerSeconds)
         if(timerSeconds > 1){
             timerSeconds -= 1
