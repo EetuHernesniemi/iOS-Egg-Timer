@@ -8,7 +8,9 @@
 import UIKit
 
 class ViewController: UIViewController {
-    let eggTimes : [String: Int] = ["Soft": 5, "Medium": 7, "Hard": 12]
+    let eggBoilTimeInMinutes : [String: Int] = ["Soft": 5, "Medium": 7, "Hard": 12]
+    var timer = Timer()
+    var timerSeconds: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,8 +19,29 @@ class ViewController: UIViewController {
     
     @IBAction func hardnessSelected(_ sender: UIButton) {
         let hardness : String = sender.currentTitle!//Make sure egg buttons have correct title values.
-        print(hardness)
-        print(eggTimes[hardness]!)
+        timerSeconds = eggBoilTimeInMinutes[hardness]! * 60
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) {
+            timer in
+            self.updateTimerCounting()
+        }
+    }
+    
+    func updateTimerCounting(){
+        print("Hello")
+        print(timerSeconds)
+        if(timerSeconds > 1){
+            timerSeconds -= 1
+        } else if timerSeconds == 1{
+            timerSeconds -= 1
+            alarm()
+        }else{
+            timer.invalidate()
+        }
+    }
+    
+    func alarm(){
+        //TODO: alarm noice implementation
+        print("Aleeeert! Egs are done.")
     }
 }
 
