@@ -19,18 +19,18 @@ class ViewController: UIViewController {
     var player: AVAudioPlayer?
     
     override func viewDidLoad() {
-        boilProgressBar.progress = 1
+        boilProgressBar.progress = 0
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
     
     @IBAction func hardnessSelected(_ sender: UIButton) {
         timer.invalidate()
-        boilProgressBar.progress = 1
+        boilProgressBar.progress = 0
         hardness = sender.currentTitle!//Make sure egg buttons have correct title values.
         topTextLabel.text = "Boiling " + hardness + " Eggs."
         timerTotalSeconds = eggBoilTimeInMinutes[hardness]! * 60
-        timerCurrentSeconds = timerTotalSeconds
+        timerCurrentSeconds = 0
         
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) {
             timer in
@@ -39,8 +39,8 @@ class ViewController: UIViewController {
     }
     
     func updateTimerCounting(){
-        if(timerCurrentSeconds > 0){
-            timerCurrentSeconds -= 1
+        if(timerCurrentSeconds < timerTotalSeconds){
+            timerCurrentSeconds += 1
             setProgressBarValue()
         } else{
             timer.invalidate()
