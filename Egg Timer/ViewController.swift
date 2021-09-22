@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
     @IBOutlet weak var topTextLabel: UILabel!
@@ -15,6 +16,7 @@ class ViewController: UIViewController {
     var timer = Timer()
     var timerCurrentSeconds: Int = 0
     var timerTotalSeconds: Int = 0
+    var player: AVAudioPlayer?
     
     override func viewDidLoad() {
         boilProgressBar.progress = 1
@@ -47,8 +49,9 @@ class ViewController: UIViewController {
     }
     
     func alarm(){
-        //TODO: alarm noice implementation
         topTextLabel.text = "DONE!"
+        setupPlayerWithKey(fileName: "alarm_sound")
+        player?.play()
     }
     
     func setProgressBarValue(){
@@ -57,6 +60,23 @@ class ViewController: UIViewController {
             divisionResult = Float(timerCurrentSeconds) / Float(timerTotalSeconds)
         }
         boilProgressBar.progress = divisionResult
+    }
+    
+    func setupPlayerWithKey(fileName: String!){
+        guard let url = Bundle.main.url(forResource: fileName, withExtension: "mp3") else {
+                print("Error. Audio resource url not found")
+                return
+            }
+            do {
+                // AVAudioSession initialisation makes the app ready to takeover the device audio. Some devices may throw errors otherwise.
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+                try AVAudioSession.sharedInstance().setActive(true)
+                player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.wav.rawValue)
+                player!.prepareToPlay()
+            } catch let error as NSError {
+                print("Error in playSound func")
+                print("Error: \(error.localizedDescription)")
+            }
     }
 }
 
