@@ -9,20 +9,27 @@ import UIKit
 
 class ViewController: UIViewController {
     @IBOutlet weak var topTextLabel: UILabel!
+    @IBOutlet weak var boilProgressBar: UIProgressView!
     let eggBoilTimeInMinutes : [String: Int] = ["Soft": 5, "Medium": 7, "Hard": 12]
+    var hardness : String = ""
     var timer = Timer()
-    var timerSeconds: Int = 0
+    var timerCurrentSeconds: Int = 0
+    var timerTotalSeconds: Int = 0
     
     override func viewDidLoad() {
+        boilProgressBar.progress = 1
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
     
     @IBAction func hardnessSelected(_ sender: UIButton) {
         timer.invalidate()
-        let hardness : String = sender.currentTitle!//Make sure egg buttons have correct title values.
+        boilProgressBar.progress = 1
+        hardness = sender.currentTitle!//Make sure egg buttons have correct title values.
         topTextLabel.text = "Boiling " + hardness + " Eggs."
-        timerSeconds = eggBoilTimeInMinutes[hardness]! * 60
+        timerTotalSeconds = eggBoilTimeInMinutes[hardness]! * 60
+        timerCurrentSeconds = timerTotalSeconds
+        
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) {
             timer in
             self.updateTimerCounting()
@@ -30,9 +37,9 @@ class ViewController: UIViewController {
     }
     
     func updateTimerCounting(){
-        print(timerSeconds)
-        if(timerSeconds > 0){
-            timerSeconds -= 1
+        if(timerCurrentSeconds > 0){
+            timerCurrentSeconds -= 1
+            setProgressBarValue()
         } else{
             timer.invalidate()
             alarm()
@@ -42,6 +49,14 @@ class ViewController: UIViewController {
     func alarm(){
         //TODO: alarm noice implementation
         topTextLabel.text = "DONE!"
+    }
+    
+    func setProgressBarValue(){
+        var divisionResult : Float = 0
+        if(timerCurrentSeconds > 0){
+            divisionResult = Float(timerCurrentSeconds) / Float(timerTotalSeconds)
+        }
+        boilProgressBar.progress = divisionResult
     }
 }
 
